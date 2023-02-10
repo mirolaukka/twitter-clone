@@ -1,0 +1,16 @@
+{
+    "users": [
+        {
+            "username": "test",
+            "password": "$pbkdf2-sha256$30000$AGCMMeY8Z4yRcu7d.18rpQ$6H3meiKjbjcjYcU6tLL9I.jsY3M5pD854xdhF8cHQlY"
+        },
+        {
+            "username": "test2",
+            "password": "$pbkdf2-sha256$30000$ylmLsbb2XqsVYsy5F8I4Jw$cO4xKqjUB8cqcikGMPwTdZPNUeM2M3myaUHFa/PrSBk"
+        },
+        {
+            "username": "demo",
+            "password": "$pbkdf2-sha256$30000$5jznnLN27p2TMoaQ0rrXGg$KMnqsAAqhHepIe9ig//uSXYFYtqvOuyZ/sxWkJmC718"
+        }
+    ]
+}
