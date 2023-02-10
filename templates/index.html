@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Twitter Clone</title>
+    <link rel="stylesheet" href="..\static\css\style.css">
+    <link rel="stylesheet" href="..\static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        function logout() {
+            var request = new XMLHttpRequest();
+            var url = "http://127.0.0.1:5000/logout";
+
+            request.open("POST", url, true);
+            request.send();
+
+            request.onload = function () {
+                console.log(request.responseText);
+            }
+            window.location.reload();
+
+
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="background">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4" style="display: flex; justify-content: flex-end;">
+                    <ul class="nav flex-column fixed-left"
+                        style="height: 100%; position: fixed; margin-top: 100px; padding-left: 100px !important;">
+
+                        <li class="nav-item" style="font-weight:400 !important">
+                             <a href="#" style="text-decoration: none; color:black"> <i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" style="text-decoration: none; color:black"><i class="fa-regular fa-hashtag"></i> Explore</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" style="text-decoration: none; color:black"><i class="fa-regular fa-bell"></i> Notifications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" style="text-decoration: none; color:black"><i class="fa-regular fa-envelope"></i> Messages</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" style="text-decoration: none; color:black"><i class="fa-regular fa-bookmark"></i> Bookmarks</a>
+                        </li>
+                        {% if not session.username %}
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" onclick="loginSwal()"
+                                style="text-decoration: none; color:black"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" onclick="registerSwal()"
+                                style="text-decoration: none; color:black"><i class="fa-sharp fa-regular fa-address-card"></i> Register</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item dropdown">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                                aria-expanded="false" style="text-decoration: none; color:black"><img
+                                    class="tweet-card-avatar2"
+                                    src="https://merriam-webster.com/assets/mw/images/article/art-wap-landing-mp-lg/egg-3442-4c317615ec1fd800728672f2c168aca5@1x.jpg"
+                                    alt="">
+                                {{session.username}}<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="nav-item">
+                                    <a class="nav-item" href="javascript:void(0);"
+                                        style="text-decoration: none; color:black" onclick="logout()">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <input type="hidden" id="username_value" value={{session.username}}>
+
+                <div class="col-md-4" style="border-right: 1px solid #e6ecf0; border-left: 1px solid #e6ecf0;">
+                    <div class="form">
+                        <input type="text" class="form-control form-input" placeholder="Search anything...">
+                      </div>
+                    <form role="form ml-auto">
+                        <li class="tweet-card2" style="list-style: none; padding-bottom: 20px; padding-top: 30px;">
+                            <div class="tweet-content">
+                                <div class="tweet-header">
+                                    <a>
+                                        <img class="tweet-card-avatar"
+                                            src="https://merriam-webster.com/assets/mw/images/article/art-wap-landing-mp-lg/egg-3442-4c317615ec1fd800728672f2c168aca5@1x.jpg"
+                                            alt="">
+                                    </a>
+                                    <div class="tweet-text">
+                                        <textarea class="form-control" id="tweetDescription" rows="3"
+                                            placeholder="What's happening?"></textarea>
+                                    </div>
+                                    <div class="right-text">
+                                        <button type="submit mt-5" class="btn btn-primary tweet-button float-right" ,
+                                            id="tweetButton">
+                                            Tweet
+                                        </button>
+                                    </div>
+                                </div>
+                        </li>
+                    </form>
+                    <br>
+                    <br>
+                    <hr>
+                    <ol class="tweet-list">
+                        {% for i in range(0,len) %}
+                        <li class="tweet-card">
+                            <div class="tweet-content">
+                                <div class="tweet-header">
+                                    <span class="fullname">
+                                        <strong>{{tweets[i]['author']}}</strong>
+                                    </span>
+                                    <span class="username">@{{tweets[i]['author']}}</span>
+                                    <span class="tweet-time"> - {{tweets[i]['time']}}</span>
+                                </div>
+                                <a>
+                                    <img class="tweet-card-avatar"
+                                        src="https://merriam-webster.com/assets/mw/images/article/art-wap-landing-mp-lg/egg-3442-4c317615ec1fd800728672f2c168aca5@1x.jpg"
+                                        alt="">
+                                </a>
+                                <div class="tweet-text">
+                                    <p class="" lang="es" data-aria-label-part="0">
+
+                                        {{tweets[i]['message']}}
+
+                                    </p>
+                                </div>
+                                <div class="tweet-footer">
+                                    <br>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content">
+                <form action="/examples/actions/confirmation.php" method="post">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Login</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" class="form-control" required="required">
+                        </div>
+                        <div class="form-group">
+                            <div class="clearfix">
+                                <label>Password</label>
+                                <a href="#" class="float-right text-muted"><small>Forgot?</small></a>
+                            </div>
+
+                            <input type="password" class="form-control" required="required">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <label class="form-check-label"><input type="checkbox"> Remember me</label>
+                        <input type="submit" class="btn btn-primary" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="static\js\index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
+    </script>
+    <script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+
+
+    </script>
+
+</body>
+
+</html>

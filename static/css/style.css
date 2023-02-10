@@ -1,0 +1,164 @@
+
+@import url('https://fonts.cdnfonts.com/css/chirp-2');
+
+
+* {
+    font-family: 'Chirp', sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+.container-fluid {
+    height: 100%;
+    overflow-y: hidden; /* don't show content that exceeds my height */
+}
+
+.nav-item {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 24px;
+}
+
+.nav-item:hover {
+    background-color:#f3f3f3;
+    transition: 0.2s;
+    border-radius: 20px;
+    padding-left: 2px;
+    padding-right: 2px;
+
+}
+
+.nav {
+    margin-right: 10px
+}
+
+#tweetDescription::placeholder {
+    font-weight:500;
+    font-size: 20px;
+
+}
+textarea { 
+    border-style: none !important; 
+    border-color: Transparent !important; 
+    overflow: auto !important;        
+  }
+
+textarea:hover, textarea:focus { 
+border-style: none !important; 
+border-color: Transparent !important; 
+overflow: auto !important;        
+}
+
+.tweet-button {
+    margin-top: 5px !important;
+    border-radius: 20px !important;
+    font-size: 16px !important;
+    width: 100px !important;
+    float:right;
+    margin-bottom: 15px;
+}
+
+.tweet-list {
+  list-style: none;
+  margin: 8px 4px 0;
+  padding: 0;
+}
+.tweet-card {
+  background-color: #fff;
+  border-bottom: 1px solid #e6ecf0;
+  min-height: 52px;
+  padding: 9px 12px;
+}
+
+.tweet-card2 {
+    background-color: #fff;
+    min-height: 52px;
+    padding: 9px 12px;
+  }
+
+.tweet-card:hover {
+    background-color:#f3f3f3;
+    transition: 0.2s;
+}
+
+.tweet-card li {
+    list-style-type: none
+}
+
+.tweet-content {
+  margin-left: 58px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+}
+.tweet-card-avatar {
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+  float: left;
+  margin-left: -58px;
+}
+.tweet-card-avatar2 {
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+  }
+.tweet-footer-btn {
+  margin-right: 30px;
+}
+.tweet-footer-btn i, .tweet-footer-btn span {
+    padding-top: 10px;
+  color: #657786;
+  font-size: 16px;
+}
+.tweet-footer-btn span {
+  margin-left: 8px;
+}
+
+/* END Main column*/
+
+
+
+
+.form .fa-search{
+
+    position: absolute;
+    top:20px;
+    left: 20px;
+    color: #9ca3af;
+
+}
+
+.form span{
+
+        position: absolute;
+    right: 17px;
+    top: 13px;
+    padding: 2px;
+    border-left: 1px solid #d1d5db;
+
+}
+
+.left-pan{
+    padding-left: 7px;
+}
+
+.left-pan i{
+   
+   padding-left: 500px;
+}
+
+.form-input{
+    margin-top: 10px;
+    margin-bottom: 5px;
+    height: 55px;
+    text-indent: 33px;
+    border-radius: 30px !important;
+}
+
+.form-input:focus{
+
+    box-shadow: none;
+    border:none;
+}
