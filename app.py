@@ -4,11 +4,7 @@ from random import randint
 from passlib.context import CryptContext
 from datetime import datetime
 
-
 import json
-
-from flask.json import load
-
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -17,12 +13,8 @@ Session(app)
 
 tweets = []
 
-# Perus salasanan suojaus, jotta sitä ei tallenneta suoraan tietokantaan
-pwd_context = CryptContext(
-        schemes=["pbkdf2_sha256"],
-        default="pbkdf2_sha256",
-        pbkdf2_sha256__default_rounds=30000
-)
+# Basic password hashing to avoid storing passwords directly in the database
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], default="pbkdf2_sha256", pbkdf2_sha256__default_rounds=30000)
 
 
 def encrypt_password(password):
@@ -31,6 +23,7 @@ def encrypt_password(password):
 
 def check_encrypted_password(password, hashed):
     return pwd_context.verify(password, hashed)
+
 
 def get_user(username):
     with open('users.json', 'r') as f:
@@ -41,6 +34,7 @@ def get_user(username):
 
     return None
 
+
 def load_tweets_from_json():
     with open('tweets.json') as f:
         d = json.load(f)
@@ -48,45 +42,46 @@ def load_tweets_from_json():
             tweets.append(Tweet(p['author'], p['message'], int(p['id']), p['time']))
         f.close()
 
+
 @app.route("/")
 def index():
-    if not tweets: load_tweets_from_json()
+    if not tweets:
+        load_tweets_from_json()
 
     return render_template('index.html', len=len(tweets), tweets=tweets)
 
-@app.route("/post", methods = ["POST"])
-def post_tweet():
 
+@app.route("/post", methods=["POST"])
+def post_tweet():
     data = request.json
 
-    new_Tweet = Tweet(data['username'], data['description'])
-    new_Tweet.insert() # Lisätään twiitti JSON tiedostoon
-    tweets.insert(0, new_Tweet) # Lisätään twiitti `tweets`-listaan
+    new_tweet = Tweet(data['username'], data['description'])
+    new_tweet.insert()  # Add tweet to JSON file
+    tweets.insert(0, new_tweet)  # Add tweet to 'tweets' list
 
-    return new_Tweet.__dict__
+    return new_tweet.__dict__
 
-@app.route("/register", methods = ["POST"])
+
+@app.route("/register", methods=["POST"])
 def register():
-
     data = request.json
 
     if not data:
-        return {"message":"Invalid data"}, 400
+        return {"message": "Invalid data"}, 400
 
     if get_user(data['username']):
-        return {"message":"Username already in use"}, 400
+        return {"message": "Username already in use"}, 400
 
     new_user = User(data['username'], data['password'], new=True)
     new_user.insert()
 
     session['username'] = new_user.username
 
-
     return new_user.__dict__
 
-@app.route("/login", methods = ["POST"])
-def login():
 
+@app.route("/login", methods=["POST"])
+def login():
     data = request.json
 
     if not data:
@@ -104,35 +99,34 @@ def login():
 
     return user.__dict__, 200
 
-@app.route("/logout", methods =["POST"])
+
+@app.route("/logout", methods=["POST"])
 def logout():
-
     session.clear()
-
     return {"message": "Logged out"}, 200
+
 
 class User():
     def __init__(self, username, password, new=False):
         self.username = username
-        self.password = encrypt_password(password) if new else password # Jos käyttäjä ei ole uusi, ei salata salasanaa koska se on valmiiksi salattu.
+        self.password = encrypt_password(password) if new else password  # If user is not new, password is already hashed
 
     def insert(self):
         with open('users.json', 'r+') as f:
             file_data = json.load(f)
             file_data['users'].append(self.__dict__)
-            
             f.seek(0)
             json.dump(file_data, f, indent=4)
 
+
 class Tweet():
-    def __init__(self, author: User, message, id = None, time = None):
+    def __init__(self, author: User, message, id=None, time=None):
         self.author = author
         self.message = message
-        self.id = id if id else randint(1_000_000, 9_999_999) # Todellisessa sovelluksessa tähän lisättäisiin jonkunlainen tarkistus/logiikka ettei samaa ID:tä voi olla kahdella twiitillä. Noin 0.0009% (1 in 9 000 000) todennäköisyys tulla 2 samaa ID:tä
-        self.time = time if time else str(datetime.now().strftime("%d %b")) # Jos aikaa ei ole asetettu, se tarkoittaa että tämä on uusi twiitti joten me lisätään tämänhetkinen aika siihen
+        self.id = id if id else randint(1_000_000, 9_999_999)  # In a real application, a more sophisticated ID system would be used to avoid duplicates
+        self.time = time if time else str(datetime.now().strftime("%d %b"))  # If time not provided, it means this is a new tweet, so we add the current time
 
-
-    # Functiot jotta voidan pyytää tietoa twiitistä.
+    # Functions to get tweet information
     def get_author(self) -> str:
         return self.author
 
@@ -142,14 +136,10 @@ class Tweet():
     def get_id(self) -> int:
         return self.id
 
-
-    # Lisätään twiitti "tietokantaan", joka on tässä projektissa JSON-tiedosto. Oikeassa käytössä käytettäisiin esimerkiksi SQL tietokantaa.
+    # Insert the tweet into the "database", which is a JSON file in this project. In a real application, a database like SQL would be used.
     def insert(self):
         with open('tweets.json', 'r+') as f:
-
             file_data = json.load(f)
             file_data['tweets'].append(self.__dict__)
-
             f.seek(0)
             json.dump(file_data, f, indent=4)
-
